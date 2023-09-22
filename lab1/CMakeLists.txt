@@ -1,0 +1,11 @@
+cmake_minimum_required(VERSION 3.10)
+project(lab01)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+add_executable(child1 ${SOURCE_DIR}/child1.c ${SOURCE_DIR}/mstring.c)
+add_executable(child2 ${SOURCE_DIR}/child2.c ${SOURCE_DIR}/mstring.c)
+add_executable(parent ${SOURCE_DIR}/parent.c ${SOURCE_DIR}/mstring.c)
