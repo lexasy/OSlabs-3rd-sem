@@ -45,7 +45,7 @@ int main() {
         execl("../build/child2", "../build/child2", NULL);
         close(pipe_fd2[0]); close(pipe_fd3[1]);
     } else { //parent
-        my_string *p_mstr = create_string(); //int a;
+        my_string *p_mstr = create_string();
         printf("Enter your string: ");
         read_string(p_mstr);
         close(pipe_fd1[0]); close(pipe_fd3[1]);
