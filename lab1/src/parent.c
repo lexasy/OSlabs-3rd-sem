@@ -21,16 +21,17 @@ void my_dup(int old_fd, int new_fd) {
     }
 }
 
+void my_pipe(int pipe_fd[]) {
+    int err = pipe(pipe_fd);
+    if (-1 == err) {
+        perror("pipe");
+        exit(-1);
+    }
+}
+
 int main() {
     int pipe_fd1[2]; int pipe_fd2[2]; int pipe_fd3[2];
-    int err1 = pipe(pipe_fd1);
-    int err2 = pipe(pipe_fd2);
-    int err3 = pipe(pipe_fd3);
-    if (-1 == err1 || -1 == err2 || -1 == err3) {
-        perror("pipe");
-        return -1;
-    }
-
+    my_pipe(pipe_fd1); my_pipe(pipe_fd2); my_pipe(pipe_fd3);
     pid_t cp1, cp2;
     if ((cp1 = create_process()) == 0) { //child1
         close(pipe_fd1[1]); close(pipe_fd2[0]);
