@@ -34,27 +34,27 @@ int main() {
     my_pipe(pipe_fd1); my_pipe(pipe_fd2); my_pipe(pipe_fd3);
     pid_t cp1, cp2;
     if ((cp1 = create_process()) == 0) { //child1
-        close(pipe_fd1[1]); close(pipe_fd2[0]);
+        if (close(pipe_fd1[1]) == 1 || close(pipe_fd2[0]) == 1) {return -1;}
         my_dup(pipe_fd1[0], STDIN_FILENO);
         my_dup(pipe_fd2[1], STDOUT_FILENO);
         execl("../build/child1", "../build/child1", NULL);
-        close(pipe_fd1[0]); close(pipe_fd2[1]);
+        if (close(pipe_fd1[0]) == -1 || close(pipe_fd2[1]) == -1) {return -1;}
     } else if (cp1 > 0 && (cp2 = create_process()) == 0) { //child2
-        close(pipe_fd2[1]); close(pipe_fd3[0]);
+        if (close(pipe_fd2[1]) == -1|| close(pipe_fd3[0]) == -1) {return -1;} 
         my_dup(pipe_fd2[0], STDIN_FILENO);
         my_dup(pipe_fd3[1], STDOUT_FILENO);
         execl("../build/child2", "../build/child2", NULL);
-        close(pipe_fd2[0]); close(pipe_fd3[1]);
+        if (close(pipe_fd2[0]) == -1 || close(pipe_fd3[1]) == -1) {return -1;}
     } else { //parent
         my_string *p_mstr = create_string();
         printf("Enter your string: ");
         read_string(p_mstr);
-        close(pipe_fd1[0]); close(pipe_fd3[1]);
+        if (close(pipe_fd1[0]) == -1 || close(pipe_fd3[1]) == -1) {return -1;}
         write(pipe_fd1[1], &(p_mstr->length), sizeof(int));
         write(pipe_fd1[1], p_mstr->str, sizeof(char) * p_mstr->length);
         read(pipe_fd3[0], &(p_mstr->length), sizeof(int));
         read(pipe_fd3[0], p_mstr->str, sizeof(char) * p_mstr->length);
-        close(pipe_fd1[1]); close(pipe_fd3[0]);
+        if (close(pipe_fd1[1]) == -1 || close(pipe_fd3[0]) == -1) {return -1;}
         printf("Result: "); print_string(p_mstr);
     }
     return 0;
