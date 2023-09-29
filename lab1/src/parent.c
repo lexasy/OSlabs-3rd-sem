@@ -45,8 +45,7 @@ int main() {
         if (close(pipe_fd2[0]) == -1 || close(pipe_fd3[1]) == -1) {return -1;}
     } else { //parent
         my_string *p_mstr = create_string();
-        printf("Enter your string: ");
-        read_string(p_mstr);
+        printf("Enter your string: "); read_string(p_mstr);
         if (close(pipe_fd1[0]) == -1 || close(pipe_fd3[1]) == -1) {return -1;}
         write(pipe_fd1[1], &(p_mstr->length), sizeof(int));
         write(pipe_fd1[1], p_mstr->str, sizeof(char) * p_mstr->length);
