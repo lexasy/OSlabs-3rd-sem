@@ -34,7 +34,7 @@ int main() {
     my_pipe(pipe_fd1); my_pipe(pipe_fd2); my_pipe(pipe_fd3);
     pid_t cp1, cp2;
     if ((cp1 = create_process()) == 0) { //child1
-        if (close(pipe_fd1[1]) == 1 || close(pipe_fd2[0]) == 1) {return -1;}
+        if (close(pipe_fd1[1]) == -1 || close(pipe_fd2[0]) == -1) {return -1;}
         my_dup(pipe_fd1[0], STDIN_FILENO); my_dup(pipe_fd2[1], STDOUT_FILENO);
         execl("../build/child1", "../build/child1", NULL);
         if (close(pipe_fd1[0]) == -1 || close(pipe_fd2[1]) == -1) {return -1;}
