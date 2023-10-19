@@ -43,13 +43,12 @@ void bsort(std::vector<int>& arr, int order) {
 }
 
 int main() {
-    std::clock_t start = std::clock();
-    double duration;
     std::vector<int> arr {3, 7, 4, 8, 6, 2, 1, 5};
     // std::vector<int> arr {3, 10, 7, 13, 11, 4, 16, 8, 12, 6, 2, 14, 15, 1, 5, 9};
     std::cout << "Initial array: " << arr << "\n";
+    std::clock_t start = std::clock();
     bsort(arr, 1);
+    double duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;
     std::cout << "Sorted array: " << arr << "\n";
-    duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;
-    std::cout << duration << "\n";
+    std::cout << std::fixed << duration << "\n";
 }

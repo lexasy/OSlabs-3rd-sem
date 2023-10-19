@@ -55,14 +55,13 @@ void *bitonicSort(void *arg) {
 }
 
 int main() {
-    std::clock_t start = std::clock();
-    double duration;
     std::cout << "Initial array: " << arr << "\n";
     pthread_t mainThread;
     ThreadAttr mainAttr {0, size, 1};
+    std::clock_t start = std::clock();
     pthread_create(&mainThread, NULL, bitonicSort, &mainAttr);
     pthread_join(mainThread, NULL);
+    double duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;
     std::cout << "Sorted array: " << arr << "\n";
-    duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;
-    std::cout << duration << "\n";
+    std::cout << std::fixed << duration << "\n";
 }
