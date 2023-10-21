@@ -3,9 +3,6 @@
 #include <ctime>
 #include "generator.hpp"
 
-// std::vector<int> arr {3, 7, 4, 8, 6, 2, 1, 5};
-// int size = arr.size();
-
 typedef struct {
     int low_edge; int count; int order; unsigned NUM_OF_THREADS; unsigned last_threads; std::vector<int> *arr;
 } ThreadArg;
