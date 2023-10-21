@@ -48,7 +48,7 @@ void *bitonicSort(void *arg) {
     int low_edge = threadarg->low_edge; int count = threadarg->count; int order = threadarg->order;
     if (count > 1) {
         int k = count / 2;
-        if (threadarg->NUM_OF_THREADS / 2) {
+        if (threadarg->last_threads / 2) {
             ThreadArg arg1 {low_edge, k, 1, threadarg->NUM_OF_THREADS, threadarg->last_threads / 2, threadarg->arr};
             ThreadArg arg2 {low_edge + k, k, 0, threadarg->NUM_OF_THREADS, threadarg->last_threads / 2, threadarg->arr};
             pthread_t thread1, thread2;
