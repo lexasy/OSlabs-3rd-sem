@@ -91,11 +91,9 @@ int main(int argc, char *argv[]) {
     }
     std::vector<int> vec = generate_tests(QUANTITY_OF_ELEMENTS);
     ThreadArg mainArg {0, QUANTITY_OF_ELEMENTS, 1, NUM_OF_THREADS, NUM_OF_THREADS, &vec};
-    pthread_t mainThread;
     std::cout << "Initial array: " << vec << "\n";
     std::clock_t start = std::clock();
-    pthread_create(&mainThread, NULL, bitonicSort, &mainArg);
-    pthread_join(mainThread, NULL);
+    bitonicSort(&mainArg);
     double duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;
     std::cout << "Sorted array: " << vec << "\n";
     std::cout << "Sorted for " << std::fixed << duration << "sec\n";
