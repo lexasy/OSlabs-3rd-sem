@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 #include <pthread.h>
 #include <ctime>
+#include <math.h>
 #include "generator.hpp"
 
 typedef struct {
@@ -48,7 +49,7 @@ void *bitonicSort(void *arg) {
     int low_edge = threadarg->low_edge; int count = threadarg->count; int order = threadarg->order;
     if (count > 1) {
         int k = count / 2;
-        if (threadarg->last_threads / 2) {
+        if (threadarg->last_threads / 2 || (threadarg->last_threads == threadarg->NUM_OF_THREADS && threadarg->NUM_OF_THREADS)) {
             ThreadArg arg1 {low_edge, k, 1, threadarg->NUM_OF_THREADS, threadarg->last_threads / 2, threadarg->arr};
             ThreadArg arg2 {low_edge + k, k, 0, threadarg->NUM_OF_THREADS, threadarg->last_threads / 2, threadarg->arr};
             pthread_t thread1, thread2;
@@ -70,7 +71,7 @@ int main(int argc, char *argv[]) {
         std::cerr << "Invalid quantity of arguments!\n";
         return -1;
     }
-    const unsigned NUM_OF_THREADS = std::stoi(argv[1]);
+    unsigned NUM_OF_THREADS = std::stoi(argv[1]);
     bool isPowerOfTwo = NUM_OF_THREADS && !(NUM_OF_THREADS & (NUM_OF_THREADS - 1));
     if (!isPowerOfTwo) {
         std::cerr << "Quantity of threads is not a power of two!\n";
@@ -86,6 +87,11 @@ int main(int argc, char *argv[]) {
         std::cerr << "Quantity of threads is greater than size of array!\n";
         return -1;
     }
+    unsigned power = 0;
+    while (pow(2, power) < NUM_OF_THREADS) {
+        power++;
+    }
+    NUM_OF_THREADS = power;
     std::vector<int> vec = generate_tests(QUANTITY_OF_ELEMENTS);
     ThreadArg mainArg {0, QUANTITY_OF_ELEMENTS, 1, NUM_OF_THREADS, NUM_OF_THREADS, &vec};
     std::cout << "Initial array: " << vec << "\n";
