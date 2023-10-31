@@ -1,7 +1,6 @@
 #include <bits/stdc++.h>
 #include <pthread.h>
 #include <ctime>
-#include <math.h>
 #include "generator.hpp"
 
 typedef struct {
@@ -94,10 +93,10 @@ int main(int argc, char *argv[]) {
     NUM_OF_THREADS = power;
     std::vector<int> vec = generate_tests(QUANTITY_OF_ELEMENTS);
     ThreadArg mainArg {0, QUANTITY_OF_ELEMENTS, 1, NUM_OF_THREADS, NUM_OF_THREADS, &vec};
-    std::cout << "Initial array: " << vec << "\n";
+    std::cout << "Initial sequence: " << vec << "\n";
     std::clock_t start = std::clock();
     bitonicSort(&mainArg);
     double duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;
-    std::cout << "Sorted array: " << vec << "\n";
-    std::cout << "Sorted for " << std::fixed << duration << "sec\n";
+    std::cout << "Sorted sequence: " << vec << "\n";
+    std::cout << "Sorted for " << std::fixed << duration * 1000 << "ms\n";
 }
