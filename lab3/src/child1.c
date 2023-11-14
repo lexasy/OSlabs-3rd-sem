@@ -1,37 +1,47 @@
-#include "string.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <sys/mman.h>
-#include <sys/types.h>
-#include <sys/stat.h>
+#include <sys/wait.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <errno.h>
-#include <pthread.h>
+#include <stdio.h>
 
-void tolowerc(my_string *mstr) {
-    for (int i = 0; i < mstr->length; i++) {
-        if (mstr->str[i] >= 'A' && mstr->str[i] <= 'Z') {
-            mstr->str[i] += 32;
-        }
+#define MEM_SIZE 4096
+
+char tolowerc(char c) {
+    if (c >= 'A' && c <= 'Z') {
+        c += 32;
     }
+    return c;
 }
 
-int main() {
-    int fd = open("file.txt", O_RDWR | O_CREAT, 0666);
+int main(int argc, char *argv[]) {
+    int fd = open(argv[0], O_RDWR, 0666);
     if (fd == -1) {
         perror("open");
         return -1;
     }
-    ftruncate(fd, sizeof(my_string));
-    my_string *file_in_memory = (my_string *)mmap(NULL, sizeof(my_string), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    int fd_count = open(argv[1], O_RDWR, 0666);
+    if (fd_count == -1) {
+        perror("open");
+        return -1;
+    }
+    ftruncate(fd, MEM_SIZE); ftruncate(fd_count, MEM_SIZE);
+    char *file_in_memory = mmap(NULL, MEM_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     if (file_in_memory == MAP_FAILED) {
         perror("mmap");
         return -1;
     }
-    close(fd);
-    tolowerc(&file_in_memory[0]);
-    munmap(file_in_memory, sizeof(my_string));
+    int *count_in_memory = mmap(NULL, MEM_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd_count, 0);
+    if (count_in_memory == MAP_FAILED) {
+        perror("mmap");
+        return -1;
+    }
+    close(fd); close(fd_count);
+    for (int i = 0; i < count_in_memory[0]; i++) {
+        file_in_memory[i] = tolowerc(file_in_memory[i]);
+    }
+    munmap(count_in_memory, MEM_SIZE);
+    munmap(file_in_memory, MEM_SIZE);
     return 0;
     // my_string *c1_mstr = create_string();
     // read(STDIN_FILENO, &(c1_mstr->length), sizeof(int));
