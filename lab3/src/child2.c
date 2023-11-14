@@ -16,30 +16,28 @@ void delete_double_spaces(char *mstr, size_t size) {
 }
 
 int main(int argc, char *argv[]) {
-    int fd = open(argv[0], O_RDWR, 0666);
-    if (fd == -1) {
+    int fd, fd_count;
+    char *file_in_memory; int *count_in_memory;
+    if (((fd = open(argv[0], O_RDWR, 0666)) == -1) || ((fd_count = open(argv[1], O_RDWR, 0666)) == -1)) {
         perror("open");
-        return -1;
+        exit(-1);
     }
-    int fd_count = open(argv[1], O_RDWR, 0666);
-    if (fd_count == -1) {
-        perror("open");
-        return -1;
+    if ((ftruncate(fd, MEM_SIZE) == -1) || (ftruncate(fd_count, MEM_SIZE) == -1)) {
+        perror("ftruncate");
+        exit(-1);
     }
-    ftruncate(fd, MEM_SIZE); ftruncate(fd_count, MEM_SIZE);
-    char *file_in_memory = mmap(NULL, MEM_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-    if (file_in_memory == MAP_FAILED) {
+    if (((file_in_memory = mmap(NULL, MEM_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED) || ((count_in_memory = mmap(NULL, MEM_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd_count, 0)) == MAP_FAILED)) {
         perror("mmap");
-        return -1;
+        exit(-1);
     }
-    int *count_in_memory = mmap(NULL, MEM_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd_count, 0);
-    if (count_in_memory == MAP_FAILED) {
-        perror("mmap");
-        return -1;
+    if ((close(fd) == -1) || (close(fd_count) == -1)) {
+        perror("close");
+        exit(-1);
     }
-    close(fd); close(fd_count);
     delete_double_spaces(file_in_memory, count_in_memory[0]);
-    munmap(count_in_memory, MEM_SIZE);
-    munmap(file_in_memory, MEM_SIZE);
+    if ((munmap(count_in_memory, MEM_SIZE) == -1) || (munmap(file_in_memory, MEM_SIZE) == -1)) {
+        perror("munmap");
+        exit(-1);
+    }
     return 0;
 }

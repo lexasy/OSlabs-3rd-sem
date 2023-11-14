@@ -5,8 +5,11 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <semaphore.h>
 
 #define MEM_SIZE 4096
+
+sem_t semaphore;
 
 pid_t create_process() {
     pid_t pid = fork();
@@ -18,6 +21,7 @@ pid_t create_process() {
 }
 
 int main() {
+    sem_init(&semaphore, 0, 1);
     int fd = open("file", O_RDWR | O_CREAT, 0666);
     if (fd == -1) {
         perror("open");
@@ -50,15 +54,19 @@ int main() {
     close(fd); close(fd_count);
     pid_t cp1, cp2;
     if ((cp1 = create_process()) == 0) { //child1
+        sem_wait(&semaphore);
         if (execv("../build/child1", argv) == -1) {
             perror("execv");
             return -1;
         }
+        sem_post(&semaphore);
     } else if (cp1 > 0 && (cp2 = create_process()) == 0) { //child2
+        sem_wait(&semaphore);
         if (execv("../build/child2", argv) == -1) {
             perror("execv");
             return -1;
         }
+        sem_post(&semaphore);
     } else { //parent
         wait(NULL);
         printf("Result: "); 
@@ -68,6 +76,7 @@ int main() {
         printf("\n");
         munmap(count_in_memory, MEM_SIZE);
         munmap(file_in_memory, MEM_SIZE);
+        sem_destroy(&semaphore);
     }
     return 0;
 }
