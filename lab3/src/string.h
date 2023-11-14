@@ -10,5 +10,3 @@ typedef struct {
 
 my_string *create_string();
 void read_string(my_string *mstr);
-void print_string(my_string *mstr);
-

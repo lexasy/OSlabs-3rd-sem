@@ -12,10 +12,3 @@ void read_string(my_string *mstr) {
         mstr->str[mstr->length] = c; mstr->length++;
     }
 }
-
-void print_string(my_string *mstr) {
-    for (int j = 0; j < mstr->length; j++) {
-        printf("%c", mstr->str[j]);
-    }
-    printf("\n");
-}
