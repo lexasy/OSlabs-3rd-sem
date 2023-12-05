@@ -1,4 +1,5 @@
 #include "foos.h"
+#include <math.h>
 
 // Using method of left rectangles
 float SinIntegral(float A, float B, float e) {
