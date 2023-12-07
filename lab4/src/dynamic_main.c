@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <dlfcn.h>
 
 int main() {
@@ -7,7 +8,7 @@ int main() {
         fputs(dlerror(), stderr);
         exit(1);
     }
-    int realization = 0;
+    int realization = 1;
     int cmd;
     char *error;
     while (printf("Enter the command (0 - changing realization (library), 1 - calculating integral of sin, 2 - calulating Pi number): ") > 0 && scanf("%d", &cmd) != EOF) {
@@ -24,7 +25,8 @@ int main() {
             }
             printf("Realization was changed from realization%d to realization%d.\n", (realization == 1 ? 2 : 1), realization);
         } else if (cmd == 1) {
-            float (*SinIntegral)(float, float, float) = dlsym(handler, "SinIntegral");
+            float (*SinIntegral)(float, float, float);
+            *(float **) (&SinIntegral) = dlsym(handler, "SinIntegral");
             if ((error = dlerror()) != NULL)  {
                 fprintf(stderr, "%s\n", error);
                 exit(1);
@@ -34,7 +36,8 @@ int main() {
             scanf("%f %f %f", &A, &B, &e);
             printf("Result: %f\n", SinIntegral(A, B, e));
         } else if (cmd == 2) {
-            float (*Pi)(int) = dlsym(handler, "Pi");
+            float (*Pi)(int);
+            *(float **) (&Pi) = dlsym(handler, "Pi");
             if ((error = dlerror()) != NULL)  {
                 fprintf(stderr, "%s\n", error);
                 exit(1);
