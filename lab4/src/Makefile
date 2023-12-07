@@ -5,7 +5,7 @@ OBJECT_FLAG = -o
 MATH_FLAG = -lm
 PIC_FLAG = -fPIC
 SHARED_FLAG = -shared
-DYNAMIC_LIBRARIES_FLAG = -ldl
+DYNAMIC_LOADING_FLAG = -ldl
 
 all : linking_realization1 linking_realization2 dynamic
 
@@ -25,16 +25,16 @@ realization1 : realization1.c foos.h
 		$(COMPILER) $(COMPILER_FLAGS) $(COMPILE_FLAG) realization1.c
 
 dynamic : dynamic_main dynamic_realization1 dymanic_realization2
-		$(COMPILER) $(COMPILER_FLAGS) dynamic_main.o $(OBJECT_FLAG) dynamic $(DYNAMIC_LIBRARIES_FLAG)
+		$(COMPILER) $(COMPILER_FLAGS) dynamic_main.o $(OBJECT_FLAG) dynamic $(DYNAMIC_LOADING_FLAG)
 
 dynamic_main : dynamic_main.c 
-		$(COMPILER) $(COMPILER_FLAGS) $(COMPILE_FLAG) dynamic_main.c $(DYNAMIC_LIBRARIES_FLAG)
+		$(COMPILER) $(COMPILER_FLAGS) $(COMPILE_FLAG) dynamic_main.c $(DYNAMIC_LOADING_FLAG)
 
 dymanic_realization2 : realization2.c foos.h
-		$(COMPILER) $(COMPILER_FLAGS) $(PIC_FLAG) $(SHARED_FLAG) $(OBJECT_FLAG) realization2.so realization2.c $(MATH_FLAG)
+		$(COMPILER) $(COMPILER_FLAGS) $(PIC_FLAG) $(SHARED_FLAG) $(OBJECT_FLAG) librealization2.so realization2.c $(MATH_FLAG)
 
 dynamic_realization1 : realization1.c foos.h
-		$(COMPILER) $(COMPILER_FLAGS) $(PIC_FLAG) $(SHARED_FLAG) $(OBJECT_FLAG) realization1.so realization1.c $(MATH_FLAG)
+		$(COMPILER) $(COMPILER_FLAGS) $(PIC_FLAG) $(SHARED_FLAG) $(OBJECT_FLAG) librealization1.so realization1.c $(MATH_FLAG)
 
 clean : 
 		rm *.o *.so linking_realization1 linking_realization2 dynamic

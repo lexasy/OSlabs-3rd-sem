@@ -3,7 +3,7 @@
 #include <dlfcn.h>
 
 int main() {
-    void *handler = dlopen("./realization1.so", RTLD_LAZY);
+    void *handler = dlopen("./librealization1.so", RTLD_LAZY);
     if (!handler) {
         fputs(dlerror(), stderr);
         exit(1);
@@ -18,7 +18,7 @@ int main() {
                 exit(1);
             }
             realization = (realization == 1 ? 2 : 1);
-            handler = (realization == 1 ? dlopen("./realization1.so", RTLD_LAZY) : dlopen("./realization2.so", RTLD_LAZY));
+            handler = (realization == 1 ? dlopen("./librealization1.so", RTLD_LAZY) : dlopen("./librealization2.so", RTLD_LAZY));
             if (!handler) {
                 fputs(dlerror(), stderr);
                 exit(1);
