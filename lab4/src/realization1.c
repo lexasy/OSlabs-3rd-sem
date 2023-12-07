@@ -4,10 +4,10 @@
 // Using method of left rectangles
 float SinIntegral(float A, float B, float e) {
     float result = 0;
-    for (float i = A; i < B; i += e) {
-        result += sin(i);
+    for (float i = A; i <= B; i += e) {
+        result += sin(i) * e;
     }
-    return result * e;
+    return result;
 }
 
 // Using Leibniz row
