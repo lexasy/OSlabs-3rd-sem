@@ -28,7 +28,7 @@ dynamic : dynamic_main dynamic_realization1 dymanic_realization2
 		$(COMPILER) $(COMPILER_FLAGS) dynamic_main.o $(OBJECT_FLAG) dynamic $(DYNAMIC_LOADING_FLAG)
 
 dynamic_main : dynamic_main.c 
-		$(COMPILER) $(COMPILER_FLAGS) $(COMPILE_FLAG) dynamic_main.c $(DYNAMIC_LOADING_FLAG)
+		$(COMPILER) $(COMPILER_FLAGS) $(COMPILE_FLAG) dynamic_main.c
 
 dymanic_realization2 : realization2.c foos.h
 		$(COMPILER) $(COMPILER_FLAGS) $(PIC_FLAG) $(SHARED_FLAG) $(OBJECT_FLAG) librealization2.so realization2.c $(MATH_FLAG)
