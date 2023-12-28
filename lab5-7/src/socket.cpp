@@ -1,5 +1,4 @@
 #include "../include/socket.hpp"
-#include <optional>
 
 void send_message(zmq::socket_t& socket, const std::string& message) {
     zmq::message_t msg(message.size());
@@ -9,11 +8,18 @@ void send_message(zmq::socket_t& socket, const std::string& message) {
 
 std::string receive_message(zmq::socket_t& socket) {
     zmq::message_t message;
+    int receiving;
     try {
         std::optional<size_t> res = socket.recv(message);
+        if (res) {
+            receiving = static_cast<int>(*res);
+        }
     }
     catch (...) {
-        throw std::runtime_error("Node is unavailable");
+        receiving = 0;
+    }
+    if (receiving == 0) {
+        return "Error: Node is unavailable lee";
     }
     std::string received_message(static_cast<char *>(message.data()), message.size());
     return received_message;

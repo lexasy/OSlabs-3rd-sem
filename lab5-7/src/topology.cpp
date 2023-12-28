@@ -5,6 +5,7 @@ void Topology::insert(int id, int parent_id) {
         std::list<int> new_list;
         new_list.push_back(id);
         data.push_back(new_list);
+        return;
     }
     int list_id = find(parent_id);
     if (list_id == -1) {
@@ -15,7 +16,7 @@ void Topology::insert(int id, int parent_id) {
     for (std::list<int>::iterator internal = external->begin(); internal != external->end(); internal++) {
         if (*internal == parent_id) {
             external->insert(++internal, id);
-            break;
+            return;
         }
     }
 }
@@ -46,8 +47,17 @@ void Topology::erase(int id) {
             if (external->empty()) {
                 data.erase(external);
             }
-            break;
+            return;
         }
     }
+}
+
+int Topology::get_first_id(int list_id) {
+    std::list<std::list<int>>::iterator it = data.begin();
+    std::advance(it, list_id);
+    if (it->begin() == it->end()) {
+        return -1;
+    }
+    return *(it->begin());
 }
 
