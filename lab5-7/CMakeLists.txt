@@ -1,26 +1,25 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.16.3)
 project(lab5-7)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_CXX_FLAGS "-lzmq")
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
-add_executable(calculator include/topology.hpp src/topology.cpp include/socket.hpp 
-        src/socket.cpp src/calculator_node.cpp
+add_executable(server include/topology.hpp src/topology.cpp include/socket.hpp 
+        src/socket.cpp src/calculation_node.cpp
 )
-target_include_directories(calculator PRIVATE include)
+target_include_directories(server PRIVATE include)
 
-add_executable(controller include/topology.hpp src/topology.cpp include/socket.hpp
-        src/socket.cpp src/controller_node.cpp
+add_executable(client include/topology.hpp src/topology.cpp include/socket.hpp
+        src/socket.cpp src/control_node.cpp
 )
 
 
-target_include_directories(controller PRIVATE include)
+target_include_directories(client PRIVATE include)
 
-target_link_libraries(calculator PRIVATE zmq)
+target_link_libraries(server PRIVATE zmq)
 
-target_link_libraries(controller PRIVATE zmq)
+target_link_libraries(client PRIVATE zmq)

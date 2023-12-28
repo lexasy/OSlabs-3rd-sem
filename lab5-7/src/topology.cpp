@@ -1,63 +1,62 @@
 #include "../include/topology.hpp"
 
-void Topology::insert(int id, int parent_id) {
-    if (parent_id == -1) {
-        std::list<int> new_list;
-        new_list.push_back(id);
-        data.push_back(new_list);
+void Topology::insert(int id, int parentId) {
+    if (parentId == -1) {
+        std::list<int> newList;
+        newList.push_back(id);
+        list.push_back(newList);
         return;
     }
-    int list_id = find(parent_id);
-    if (list_id == -1) {
+    int listId = find(parentId);
+    if (listId == -1) {
         throw std::runtime_error("Wrong parent id");
     }
-    std::list<std::list<int>>::iterator external = data.begin();
-    std::advance(external, list_id);
-    for (std::list<int>::iterator internal = external->begin(); internal != external->end(); internal++) {
-        if (*internal == parent_id) {
-            external->insert(++internal, id);
+    auto it1 = list.begin();
+    std::advance(it1, listId);
+    for (auto it2 = it1->begin(); it2 != it1->end(); ++it2) {
+        if (*it2 == parentId) {
+            it1->insert(++it2, id);
             return;
         }
     }
 }
 
 int Topology::find(int id) {
-    int curr_id = 0;
-    for (std::list<std::list<int>>::iterator external = data.begin(); external != data.end(); external++) {
-        for (std::list<int>::iterator internal = external->begin(); internal != external->end(); internal++) {
-            if (*internal == id) {
-                return curr_id;
+    int curListId = 0;
+    for (auto it1 = list.begin(); it1 != list.end(); ++it1) {
+        for (auto it2 = it1->begin(); it2 != it1->end(); ++it2) {
+            if (*it2 == id) {
+                return curListId;
             }
         }
-        curr_id++;
+        ++curListId;
     }
     return -1;
 }
 
 void Topology::erase(int id) {
-    int list_id = find(id);
-    if (list_id == -1) {
+    int listId = find(id);
+    if (listId == -1) {
         throw std::runtime_error("Wrong id");
     }
-    std::list<std::list<int>>::iterator external = data.begin();
-    std::advance(external, list_id);
-    for (std::list<int>::iterator internal = external->begin(); internal != external->end(); internal++) {
-        if (*internal == id) {
-            external->erase(internal, external->end());
-            if (external->empty()) {
-                data.erase(external);
+    auto it1 = list.begin();
+    std::advance(it1, listId);
+    for (auto it2 = it1->begin(); it2 != it1->end(); ++it2) {
+        if (*it2 == id) {
+            it1->erase(it2, it1->end());
+            if (it1->empty()) {
+                list.erase(it1);
             }
             return;
         }
     }
 }
 
-int Topology::get_first_id(int list_id) {
-    std::list<std::list<int>>::iterator it = data.begin();
-    std::advance(it, list_id);
-    if (it->begin() == it->end()) {
+int Topology::getFirstId(int listId) {
+    auto it1 = list.begin();
+    std::advance(it1, listId);
+    if (it1->begin() == it1->end()) {
         return -1;
     }
-    return *(it->begin());
+    return *(it1->begin());
 }
-

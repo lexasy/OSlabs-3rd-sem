@@ -4,11 +4,15 @@
 #include <list>
 
 class Topology {
-    public: 
-        void insert(int id, int parent_id);
-        void erase(int id);
-        int find(const int node);
-        int get_first_id(int list_id);
-    private:
-	    std::list<std::list<int>> data;
+private:
+    using listType = std::list<std::list<int>>;
+
+    listType list;
+public:
+    Topology() : list() {}
+
+    void insert(int id, int parentId);
+    int find(int id);
+    void erase(int id);
+    int getFirstId(int listId);
 };
