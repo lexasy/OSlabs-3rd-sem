@@ -5,7 +5,6 @@ int main() {
     Topology list;
     std::vector<zmq::socket_t> branches;
     zmq::context_t context;
-
     std::string command;
 
     while (true) {
@@ -96,6 +95,7 @@ int main() {
                     unbind(branches[branch], id);
                     branches.erase(branches.begin() + branch);
                 }
+
             }
         } else if (command == "ping") {
             int nodeId;

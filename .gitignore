@@ -1,3 +1,6 @@
 Таненбаум Э. - Современные операционные системы (Классика Computer Science) - 2015.pdf
-a.out
+*.out
 build
+*.o
+test1
+test2
