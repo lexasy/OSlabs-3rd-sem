@@ -11,8 +11,6 @@ int main(int argc, char* argv[]) {
         childId = atoi(argv[2]);
     }
     std::string adr;
-    // std::string path = getenv("PATH_TO_CLIENT");
-
     std::unordered_map<std::string, int> dictionary;
 
     zmq::context_t context;

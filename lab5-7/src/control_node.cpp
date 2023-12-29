@@ -2,7 +2,6 @@
 #include "../include/socket.hpp"
     
 int main() {
-    // std::string path = getenv("PATH_TO_CLIENT");
     Topology list;
     std::vector<zmq::socket_t> branches;
     zmq::context_t context;
