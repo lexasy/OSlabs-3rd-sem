@@ -15,7 +15,7 @@ bool member(std::vector<pid_t> arr, pid_t pid) {
     return false;
 }
 
-int main() {
+int main(int argc, char *argv[]) {
     int answer = random_number();
     std::vector<pid_t> clients_pid;
     std::cout << "Answer: " << answer << "\n";
@@ -25,7 +25,7 @@ int main() {
     strcpy((char *)pid_mmap, std::to_string(getpid()).c_str());
     munmap(pid_mmap, SIZE);
     close(pid_fd);
-    int game_fd = shm_open(GAME_FILENAME, O_CREAT | O_RDWR, 0666);
+    int game_fd = shm_open(argv[0], O_CREAT | O_RDWR, 0666);
     ftruncate(game_fd, SIZE);
     char *game_mmap = static_cast<char *>(mmap(NULL, SIZE, PROT_WRITE | PROT_READ, MAP_SHARED, game_fd, 0));
     while (1) {
@@ -37,8 +37,6 @@ int main() {
         if (!member(clients_pid, stats["pid"])) {
             clients_pid.push_back(stats["pid"]);
         }
-        // std::cout << stats["name"] << "\n";
-        // std::cout << stats["supposition"] << "\n";
         strcpy(game_mmap, "");
         game(stats, std::to_string(answer));
         std::cout << "[SENT] " << stats.dump() << "\n";
@@ -57,5 +55,5 @@ int main() {
     }
     munmap(game_mmap, SIZE);
     close(game_fd);
-    shm_unlink(GAME_FILENAME);
+    shm_unlink(argv[0]);
 }

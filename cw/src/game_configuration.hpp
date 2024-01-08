@@ -11,8 +11,9 @@
 #include <cstring>
 
 #define GAME_FILENAME "game"
-#define GAME_SEMAPHORE "semaphore"
-#define SERVER_PID_IN_MEMORY "pid"
+#define SERVER_PID_IN_MEMORY "server_pid"
+#define MANAGER_PID_IN_MEMORY "manger_pid"
+#define MANAGER_CLIENT_COMMUNICATION "manager"
 #define SIZE 4096
 
 struct Player {
@@ -22,6 +23,7 @@ struct Player {
     int supposition = 0;
     bool win = false;
     pid_t pid;
+    std::string sess_name;
     Player(std::string _name) {
         name = _name;
         pid = getpid();
@@ -36,19 +38,24 @@ std::ostream& operator<<(std::ostream& os, const Player& player) {
 
 struct Session {
     std::string session_name;
-    std::vector<Player> players_list;
-    std::string answer;
+    std::vector<std::string> players_list;
+    int max_players_quantity;
+    // std::string answer;
 };
 
-std::ostream& operator<<(std::ostream& os, const Session& session) {
-    os << "Session name: " << session.session_name << "\n";
-    os << "Quantity of players: " << session.players_list.size() << "\n";
-    os << "Players:\n";
-    for (auto i : session.players_list) {
-        os << i << "\n";
-    }
-    os << "Answer: " << session.answer << "\n";
-    return os;
+// std::ostream& operator<<(std::ostream& os, const Session& session) {
+//     os << "Session name: " << session.session_name << "\n";
+//     os << "Quantity of players: " << session.players_list.size() << "\n";
+//     os << "Players:\n";
+//     for (auto i : session.players_list) {
+//         os << i << "\n";
+//     }
+//     // os << "Answer: " << session.answer << "\n";
+//     return os;
+// }
+
+bool operator==(const Session& session1, const Session& session2) {
+    return session1.session_name == session2.session_name;
 }
 
 int random_number() {
