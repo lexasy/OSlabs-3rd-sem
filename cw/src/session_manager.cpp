@@ -25,8 +25,9 @@ bool member(const Session& session, std::vector<Session> arr) {
 }
 
 bool not_full_sess(std::map<std::string, Session> sessions) {
+
     for (auto i : sessions) {
-        if (i.second.players_list.size() != i.second.max_players_quantity) {
+        if (i.second.players_list.size() < i.second.max_players_quantity) {
             return false;
         } 
     }
@@ -48,7 +49,6 @@ int main() {
         signal(SIGUSR1, signal_handler); 
         while (flag) {sleep(1);}
         nlohmann::json session_action = nlohmann::json::parse(std::string(session_mmap));
-        std::cout << std::string(session_mmap) << "\n";
         if (session_action["action"] == "create") {
             Session sess;
             sess.session_name = session_action["name"];
@@ -71,10 +71,11 @@ int main() {
             } else {
                 Session dest = sessions.find(session_name)->second;
                 if (dest.players_list.size() == dest.max_players_quantity) {
-                    reply["ok"] == false;
+                    reply["ok"] = false;
                     reply["desc"] = "Not more free places in session!";
                 } else {
                     dest.players_list.push_back(session_action["player"]);
+                    sessions.find(session_name)->second.players_list = dest.players_list;
                     reply["ok"] = true;
                 }
             }
@@ -83,11 +84,11 @@ int main() {
             flag = 1;
         } else if (session_action["action"] == "find") {
             nlohmann::json reply {};
-            if (sessions.size() == 0 && not_full_sess(sessions)) {
+            if (sessions.size() == 0 || not_full_sess(sessions)) {
                 reply["ok"] = false;
                 reply["desc"] = "Free sessions not found";
             } else {
-                for (auto i : sessions) {
+                for (auto& i : sessions) {
                     if (i.second.players_list.size() != i.second.max_players_quantity) {
                         i.second.players_list.push_back(session_action["player"]);
                         reply["ok"] = true;

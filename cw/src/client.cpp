@@ -118,7 +118,6 @@ int main() {
             while (flag) {sleep(1);}
             flag = 1;
             nlohmann::json reply = nlohmann::json::parse(std::string((char *)man_mmap));
-            std::cout << std::string((char *)man_mmap) << "\n";
             if (!reply["ok"]) {
                 std::cout << reply["desc"].get<std::string>() << "\n";
                 continue;
