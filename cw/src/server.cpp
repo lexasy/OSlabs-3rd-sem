@@ -18,8 +18,9 @@ bool member(std::vector<pid_t> arr, pid_t pid) {
 int main(int argc, char *argv[]) {
     int answer = random_number();
     std::vector<pid_t> clients_pid;
-    std::cout << "Answer: " << answer << "\n";
-    int pid_fd = shm_open(SERVER_PID_IN_MEMORY, O_CREAT | O_RDWR, 0666);
+    std::cout << "[" << toup(std::string(argv[0])) << "] Answer in session " << std::string(argv[0]) << " is " << answer << "\n\n";
+    std::string pid_sess = std::string(SERVER_PID_IN_MEMORY) + std::string(argv[0]);
+    int pid_fd = shm_open(pid_sess.c_str(), O_CREAT | O_RDWR, 0666);
     ftruncate(pid_fd, SIZE);
     void *pid_mmap = mmap(NULL, SIZE, PROT_WRITE | PROT_READ, MAP_SHARED, pid_fd, 0);
     strcpy((char *)pid_mmap, std::to_string(getpid()).c_str());
@@ -32,14 +33,14 @@ int main(int argc, char *argv[]) {
         signal(SIGUSR1, signal_handler);
         while (flag) {sleep(1);}
         std::string message = std::string(game_mmap);
-        std::cout << "\n[RECEIVED] " << message << "\n";
+        std::cout << "[RECEIVED] " << message << "\n";
         nlohmann::json stats = nlohmann::json::parse(message);
         if (!member(clients_pid, stats["pid"])) {
             clients_pid.push_back(stats["pid"]);
         }
         strcpy(game_mmap, "");
         game(stats, std::to_string(answer));
-        std::cout << "[SENT] " << stats.dump() << "\n";
+        std::cout << "[SENT] " << stats.dump() << "\n\n";
         if (stats["win"] == true) {
             std::string reply = "Game over! Player " + stats["name"].get<std::string>() + " won!";
             strcpy(game_mmap, reply.c_str());

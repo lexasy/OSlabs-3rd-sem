@@ -14,6 +14,8 @@
 #define SERVER_PID_IN_MEMORY "server_pid"
 #define MANAGER_PID_IN_MEMORY "manger_pid"
 #define MANAGER_CLIENT_COMMUNICATION "manager"
+#define MANAGER_WINNER_THREAD_PID_IN_MEMORY "manager_winner_pid"
+#define MANAGER_WINNER_THREAD_CLIENT_COMMUNICATION "manager_winner"
 #define SIZE 4096
 
 struct Player {
@@ -61,6 +63,11 @@ bool operator==(const Session& session1, const Session& session2) {
 int random_number() {
     srand(time(NULL));
     return rand() % 900 + 100;
+}
+
+std::string toup(std::string str) {
+    std::transform(str.begin(), str.end(), str.begin(), toupper);
+    return str;
 }
 
 void game(nlohmann::json& player_stats, std::string answer) {
