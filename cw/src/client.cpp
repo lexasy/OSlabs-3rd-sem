@@ -71,7 +71,6 @@ void *client(void *arg) {
         stats["supposition"] = player.supposition;
         stats["win"] = player.win;
         stats["pid"] = player.pid;
-        std::cout << stats.dump() << "\n";
         strcpy(game_mmap, stats.dump().c_str());
         kill(server_pid, SIGUSR1);
         signal(SIGUSR1, signal_handler);

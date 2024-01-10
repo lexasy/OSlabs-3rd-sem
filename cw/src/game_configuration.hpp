@@ -42,19 +42,7 @@ struct Session {
     std::string session_name;
     std::vector<std::string> players_list;
     int max_players_quantity;
-    // std::string answer;
 };
-
-// std::ostream& operator<<(std::ostream& os, const Session& session) {
-//     os << "Session name: " << session.session_name << "\n";
-//     os << "Quantity of players: " << session.players_list.size() << "\n";
-//     os << "Players:\n";
-//     for (auto i : session.players_list) {
-//         os << i << "\n";
-//     }
-//     // os << "Answer: " << session.answer << "\n";
-//     return os;
-// }
 
 bool operator==(const Session& session1, const Session& session2) {
     return session1.session_name == session2.session_name;
